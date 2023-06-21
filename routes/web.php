@@ -1,7 +1,6 @@
 <?php
 
 use App\Mail\TopicCreated;
-use App\Mail\UserRegistered;
 use App\Models\User;
 use App\Services\Notification\Notification;
 use Illuminate\Support\Facades\Route;
@@ -19,5 +18,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     $notification = resolve(Notification::class);
-    $notification->sendSms(User::find(1), "این یک پیام تستی است");
+    $notification->sendEmail(User::find(1), new TopicCreated());
 });

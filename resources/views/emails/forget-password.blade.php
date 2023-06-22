@@ -1,5 +1,5 @@
 @component('mail::message')
-# User Registered
+# forget-password
 
 The body of your message.
 

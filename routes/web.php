@@ -16,7 +16,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//Route::get('/', function () {
+//    $notification = resolve(Notification::class);
+//    $notification->sendEmail(User::find(1), new TopicCreated());
+//});
 Route::get('/', function () {
-    $notification = resolve(Notification::class);
-    $notification->sendEmail(User::find(1), new TopicCreated());
+    return view('home');
 });
+
+Route::get('/notifications/send-email', 'App\Http\Controllers\NotificationsController@email')
+    ->name('notification.form.email');
+

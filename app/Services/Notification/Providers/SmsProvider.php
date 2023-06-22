@@ -24,7 +24,7 @@ class SmsProvider implements Provider
         return $response->getBody();
     }
 
-    private function prepareSmsData()
+    private function prepareSmsData(): array
     {
         $data = array_merge(config('services.sms.auth'), [
             'op' => 'send',

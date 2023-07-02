@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendEmail;
+use App\Jobs\SendSms;
 use App\Models\User;
 use App\Services\Notification\Notification;
 use App\Services\Notification\Providers\Constants\EmailTypes;
@@ -24,9 +26,8 @@ class NotificationsController extends Controller
             'email_type' => 'integer'
         ]);
         try {
-            $notification = resolve(Notification::class);
             $mailable = EmailTypes::toMail($request->email_type);
-            $notification->sendEmail(User::find($request->user), new $mailable);
+            SendEmail::dispatch(User::find($request->user), new $mailable);
             return redirect()->back()->with('success', __('notification.email_sent_successfully'));
         } catch (\Throwable $th) {
             return redirect()->back()->with('failed', __('notification.email_has_problem'));
@@ -39,17 +40,15 @@ class NotificationsController extends Controller
         return view('notifications.send-sms', compact('users'));
     }
 
-    public function sendSms(Request $request, Notification $notification)
+    public function sendSms(Request $request)
     {
         $request->validate([
             'user' => 'integer|exists:user,id',
             'test' => 'string|max:256'
         ]);
         try {
-            $notification->sendSms(User::find($request->user), $request->test);
+            SendSms::dispatch(User::find($request->user), $request->test);
             return redirect()->back()->with('success', __('notification.email_sent_successfully'));
-        } catch (UserDoesNotHavePhoneNumber $e) {
-            return redirect()->back()->with('failed', __('notification.user_does_not_have_phone_number'));
         } catch (\Exception $e) {
             return redirect()->back()->with('failed', __('notification.sms_has_problem'));
         }

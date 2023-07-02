@@ -20,19 +20,19 @@
                             {{session('failed')}}
                         </div>
                     @endif
-                    <form action="" method="POST">
+                    <form action="{{route('notification.send.sms')}}" method="POST">
                         @csrf
                         <div class="form-group ">
                             <label for="user">@lang('notification.users')</label>
                             <select name="user" class="form-control" id="user">
                                 @foreach($users as $user)
-                                    <option value="{{$user->id}}">{{$user->name}}</option>
+                                    <option {{old('user') == $user->id ? 'selected' : ''}} value="{{$user->id}}">{{$user->name}}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="email_type">@lang('notification.sms_text')</label>
-                            <textarea class="form-control" name="text" id="text" rows="3"></textarea>
+                            <textarea class="form-control" name="text" id="text" rows="3">{{old('text')}}</textarea>
                         </div>
                         @if ($errors->any())
                             <ul>
